@@ -1,0 +1,59 @@
+# find java files, redirect error output if none found
+JAVA_FILES=$(ls *.java 2>/dev/null)
+
+# exit if no java files found
+if [[ $JAVA_FILES == "" ]]
+then
+	echo "No java files found in current directory."
+	exit 1
+fi
+
+echo "Java files available for commenting: "
+echo $JAVA_FILES
+read FILE 
+
+# No file name
+if [[ $FILE == "" ]]
+then
+	exit 1
+fi
+
+# Search for exact match of file name
+FOUND=$(ls *.java | grep -x $FILE)
+
+# File not found
+if [[ $FOUND == "" ]]
+then
+	echo "File not found."
+	exit 1
+fi
+
+# Header
+echo -n "Class: "
+read CLASS
+
+echo -n "Section: "
+read SECTION
+
+echo -n "Assignment: "
+read ASSIGNMENT
+
+MONTH=$(date -d "$D" '+%m')
+YEAR=$(date -d "$D" '+%Y')
+
+if [ $MONTH -lt 6 ];then
+	SEMESTER="Spring"
+elif [ $MONTH -lt 8 ];then
+	SEMESTER="Summer"
+else
+	SEMESTER="Fall"
+fi
+
+sed -i "1i/*" $FILE
+sed -i "2i* David Weinflash" $FILE
+sed -i "3i* Class: $CLASS, $SEMESTER $YEAR" $FILE
+sed -i "4i* Section: $SECTION" $FILE
+sed -i "5i*" $FILE
+sed -i "6i* Assignment: $ASSIGNMENT" $FILE 
+sed -i "7i*/" $FILE
+sed -i "8s/^/\n/" $FILE

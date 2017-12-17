@@ -18,6 +18,14 @@ then
 	exit 1
 fi
 
+# More than one file
+NUM_FILES=$(echo $FILE | wc -w)
+
+if [ $NUM_FILES -gt 1 ]; then
+	echo "Can only handle one file."
+	exit 1
+fi
+
 # Search for exact match of file name
 FOUND=$(ls *.java | grep -x $FILE)
 

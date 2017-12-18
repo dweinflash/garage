@@ -62,6 +62,29 @@ sed -i "2i* David Weinflash" $FILE
 sed -i "3i* Class: $CLASS, $SEMESTER $YEAR" $FILE
 sed -i "4i* Section: $SECTION" $FILE
 sed -i "5i*" $FILE
-sed -i "6i* Assignment: $ASSIGNMENT" $FILE 
-sed -i "7i*/" $FILE
-sed -i "8s/^/\n/" $FILE
+sed -i "6i* Assignment: $ASSIGNMENT" $FILE
+
+echo -n "Description (first line): "
+read DESCRIPTION
+
+MORE=1
+LINE=7
+
+# read DESCRIPTION line by line
+while [ $MORE == 1 ]
+do
+	sed -i "${LINE}i* ${DESCRIPTION}" $FILE
+	((LINE++))
+	echo -n "Description (q to Quit): "
+	read DESCRIPTION
+	
+	if [[ $DESCRIPTION == q ]]
+	then
+		MORE=0
+	fi
+done
+ 
+sed -i "${LINE}i*/" $FILE
+((LINE++))
+sed -i "${LINE}s/^/\n/" $FILE
+#sed -i "9s/^/\n/" $FILE

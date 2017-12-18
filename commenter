@@ -87,4 +87,5 @@ done
 sed -i "${LINE}i*/" $FILE
 ((LINE++))
 sed -i "${LINE}s/^/\n/" $FILE
-#sed -i "9s/^/\n/" $FILE
+
+BRACKETS=$(cat $FILE | grep -n "{" | cut -f 1 -d ":")

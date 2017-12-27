@@ -89,3 +89,11 @@ sed -i "${LINE}i*/" $FILE
 sed -i "${LINE}s/^/\n/" $FILE
 
 BRACKETS=$(cat $FILE | grep -n "{" | cut -f 1 -d ":")
+
+# loop through function headers in file
+for i in ${BRACKETS[@]}
+do
+	line=$i
+	line=$((line-1))
+	echo "${line}p" | ed -s "$FILE"
+done	

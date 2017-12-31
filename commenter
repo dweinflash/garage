@@ -1,3 +1,8 @@
+# java methods assumed to have the following bracket format:
+# public method(arg1)
+# {
+# }
+
 # find java files, redirect error output if none found
 JAVA_FILES=$(ls *.java 2>/dev/null)
 
@@ -93,7 +98,42 @@ BRACKETS=$(cat $FILE | grep -n "{" | cut -f 1 -d ":")
 # loop through function headers in file
 for i in ${BRACKETS[@]}
 do
+	# display line before {
 	line=$i
 	line=$((line-1))
 	echo "${line}p" | ed -s "$FILE"
+
+	# ask if method comment appropriate
+	echo -n "Comment? (y/n) "
+	read COMMENT
+
+	# comment method
+	if [[ $COMMENT == y ]]
+	then
+		line=$((line+2))
+		sed -i "${line}i/*" $FILE
+		((line++))
+		echo -n "Description (first line): "
+		read DESCRIPTION
+	
+		# method description, line by line
+		MORE=1	
+		while [ $MORE == 1 ]
+		do
+			sed -i "${line}i* ${DESCRIPTION}" $FILE
+			((line++))
+			echo -n "Description (q to Quit): "
+			read DESCRIPTION
+	
+			if [[ $DESCRIPTION == q ]]
+			then
+				MORE=0
+			fi
+		done
+
+		# end comment
+		sed -i "${line}i*/" $FILE
+		((line++))
+		sed -i "${line}s/^/\n/" $FILE					
+	fi
 done	
